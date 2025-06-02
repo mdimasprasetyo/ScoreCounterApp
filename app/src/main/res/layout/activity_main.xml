@@ -74,6 +74,20 @@
     </LinearLayout>
 
     <EditText
+        android:id="@+id/edit_left_name"
+        android:hint="Left side name"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edit_right_name"
+        android:hint="Right side name"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
         android:id="@+id/edit_session_name"
         android:hint="Session name"
         android:layout_marginTop="16dp"

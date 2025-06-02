@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Score Counter</string>
+    <string name="session_score_text">%1$s: %2$d, %3$s: %4$d</string>
 </resources>

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,6 +15,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var scoreLeft: TextView
     private lateinit var scoreRight: TextView
+    private lateinit var leftNameInput: EditText
+    private lateinit var rightNameInput: EditText
     private lateinit var sessionInput: EditText
     private lateinit var sessionList: ListView
     private lateinit var darkSwitch: Switch
@@ -33,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
         scoreLeft = findViewById(R.id.score_left)
         scoreRight = findViewById(R.id.score_right)
+        leftNameInput = findViewById(R.id.edit_left_name)
+        rightNameInput = findViewById(R.id.edit_right_name)
         sessionInput = findViewById(R.id.edit_session_name)
         sessionList = findViewById(R.id.session_list)
         darkSwitch = findViewById(R.id.switch_dark_mode)
@@ -54,13 +60,28 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_right_down).setOnClickListener { updateScore(false, -1) }
 
         findViewById<Button>(R.id.btn_save_session).setOnClickListener {
-            val name = sessionInput.text.toString().trim()
+            var name = sessionInput.text.toString().trim()
+
             if (name.isEmpty()) {
-                Toast.makeText(this, "Enter a session name", Toast.LENGTH_SHORT).show()
-            } else {
-                sessions.add(SessionAdapter.Session(name, leftScore, rightScore))
-                adapter.notifyDataSetChanged()
+                // Use timestamp as default session name
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                name = sdf.format(Date())
             }
+
+            val leftName = leftNameInput.text.toString().trim().ifEmpty { "Left" }
+            val rightName = rightNameInput.text.toString().trim().ifEmpty { "Right" }
+
+            sessions.add(SessionAdapter.Session(name, leftName, rightName, leftScore, rightScore))
+            adapter.notifyDataSetChanged()
+
+            // Clear scores and inputs for next session
+            leftScore = 0
+            rightScore = 0
+            scoreLeft.text = "0"
+            scoreRight.text = "0"
+            leftNameInput.text.clear()
+            rightNameInput.text.clear()
+            sessionInput.text.clear()
         }
     }
 

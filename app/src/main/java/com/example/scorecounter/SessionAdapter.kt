@@ -28,7 +28,13 @@ class SessionAdapter(
 
         val session = sessions[position]
         text1.text = session.name
-        text2.text = "Left: ${session.leftScore}, Right: ${session.rightScore}"
+        text2.text = context.getString(
+            R.string.session_score_text,
+            session.leftName,
+            session.leftScore,
+            session.rightName,
+            session.rightScore
+        )
 
         view.setOnLongClickListener {
             showOptionsDialog(position)
@@ -69,5 +75,11 @@ class SessionAdapter(
             .show()
     }
 
-    data class Session(var name: String, val leftScore: Int, val rightScore: Int)
+    data class Session(
+        var name: String,
+        val leftName: String,
+        val rightName: String,
+        val leftScore: Int,
+        val rightScore: Int
+    )
 }
