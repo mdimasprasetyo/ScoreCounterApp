@@ -17,6 +17,9 @@ class MainActivity : AppCompatActivity() {
     private var leftScore = 0
     private var rightScore = 0
 
+    // Track last highlighted side (true = left, false = right, null = none)
+    private var lastHighlightedLeft: Boolean? = null
+
     private lateinit var scoreLeft: TextView
     private lateinit var scoreRight: TextView
     private lateinit var leftNameInput: EditText
@@ -46,6 +49,21 @@ class MainActivity : AppCompatActivity() {
         sessionInput = findViewById(R.id.edit_session_name)
         sessionList = findViewById(R.id.session_list)
         darkSwitch = findViewById(R.id.switch_dark_mode)
+
+        // Restore scores and highlight if available
+        if (savedInstanceState != null) {
+            leftScore = savedInstanceState.getInt("leftScore", 0)
+            rightScore = savedInstanceState.getInt("rightScore", 0)
+            lastHighlightedLeft = if (savedInstanceState.containsKey("lastHighlightedLeft")) {
+                savedInstanceState.getBoolean("lastHighlightedLeft")
+            } else null
+        }
+
+        scoreLeft.text = leftScore.toString()
+        scoreRight.text = rightScore.toString()
+
+        // Restore highlight
+        lastHighlightedLeft?.let { highlightLastScore(it) }
 
         darkSwitch.isChecked = isDark
         darkSwitch.setOnCheckedChangeListener { _, checked ->
@@ -103,6 +121,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("leftScore", leftScore)
+        outState.putInt("rightScore", rightScore)
+        lastHighlightedLeft?.let { outState.putBoolean("lastHighlightedLeft", it) }
+    }
+
     private fun updateScore(isLeft: Boolean, delta: Int) {
         if (isLeft) {
             leftScore = (leftScore + delta).coerceAtLeast(0)
@@ -121,12 +146,15 @@ class MainActivity : AppCompatActivity() {
 
         scoreLeft.background = if (isLeft) highlightDrawable else transparent
         scoreRight.background = if (!isLeft) highlightDrawable else transparent
+
+        lastHighlightedLeft = isLeft
     }
 
     private fun clearScoreHighlights() {
         val transparent = ContextCompat.getDrawable(this, android.R.color.transparent)
         scoreLeft.background = transparent
         scoreRight.background = transparent
+        lastHighlightedLeft = null
     }
 
     private fun saveSessions() {
