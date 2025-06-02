@@ -26,6 +26,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
+            <EditText
+                android:id="@+id/edit_left_name"
+                android:hint="Left side name"
+                android:maxLength="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:inputType="textCapWords" />
+
             <Button
                 android:id="@+id/btn_left_up"
                 android:text="+"
@@ -69,6 +79,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
+            <EditText
+                android:id="@+id/edit_right_name"
+                android:hint="Right side name"
+                android:maxLength="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:inputType="textCapWords" />
+
             <Button
                 android:id="@+id/btn_right_up"
                 android:text="+"
@@ -104,20 +124,6 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/edit_left_name"
-        android:hint="Left side name"
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/edit_right_name"
-        android:hint="Right side name"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/edit_session_name"
