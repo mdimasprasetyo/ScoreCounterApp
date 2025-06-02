@@ -10,7 +10,8 @@ import android.widget.*
 
 class SessionAdapter(
     private val context: Context,
-    private val sessions: MutableList<Session>
+    private val sessions: MutableList<Session>,
+    private val onSessionsChanged: () -> Unit
 ) : BaseAdapter() {
 
     override fun getCount(): Int = sessions.size
@@ -44,6 +45,7 @@ class SessionAdapter(
         return view
     }
 
+
     private fun showOptionsDialog(index: Int) {
         val options = arrayOf("Edit Name", "Delete")
         AlertDialog.Builder(context)
@@ -53,6 +55,7 @@ class SessionAdapter(
                     0 -> showEditDialog(index)
                     1 -> {
                         sessions.removeAt(index)
+                        onSessionsChanged()
                         notifyDataSetChanged()
                     }
                 }
@@ -69,6 +72,7 @@ class SessionAdapter(
             .setView(input)
             .setPositiveButton("OK") { _, _ ->
                 sessions[index].name = input.text.toString()
+                onSessionsChanged()
                 notifyDataSetChanged()
             }
             .setNegativeButton("Cancel", null)

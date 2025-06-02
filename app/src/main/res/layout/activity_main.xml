@@ -18,33 +18,50 @@
         android:orientation="horizontal"
         android:layout_marginTop="16dp">
 
+        <!-- Left Side -->
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/score_left"
-                android:text="0"
-                android:textSize="32sp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/btn_left_up"
                 android:text="+"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:layout_marginVertical="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/score_left"
+                    android:text="0"
+                    android:textSize="80sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="4dp"
+                    android:minWidth="100dp"
+                    android:minHeight="80dp"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
             <Button
                 android:id="@+id/btn_left_down"
                 android:text="-"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <!-- Right Side -->
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
@@ -52,24 +69,39 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/score_right"
-                android:text="0"
-                android:textSize="32sp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
             <Button
                 android:id="@+id/btn_right_up"
                 android:text="+"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:layout_marginVertical="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/score_right"
+                    android:text="0"
+                    android:textSize="80sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="4dp"
+                    android:minWidth="100dp"
+                    android:minHeight="80dp"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
             <Button
                 android:id="@+id/btn_right_down"
                 android:text="-"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
@@ -78,32 +110,32 @@
         android:hint="Left side name"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/edit_right_name"
         android:hint="Right side name"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/edit_session_name"
         android:hint="Session name"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_save_session"
         android:text="Save Session"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <ListView
         android:id="@+id/session_list"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 </LinearLayout>

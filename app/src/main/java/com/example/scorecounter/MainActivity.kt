@@ -2,9 +2,13 @@ package com.example.scorecounter
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,8 +55,14 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        adapter = SessionAdapter(this, sessions)
+        adapter = SessionAdapter(this, sessions) {
+            saveSessions()
+        }
         sessionList.adapter = adapter
+
+        // Load previously saved sessions
+        loadSessions()
+        adapter.notifyDataSetChanged()
 
         findViewById<Button>(R.id.btn_left_up).setOnClickListener { updateScore(true, 1) }
         findViewById<Button>(R.id.btn_left_down).setOnClickListener { updateScore(true, -1) }
@@ -63,7 +73,6 @@ class MainActivity : AppCompatActivity() {
             var name = sessionInput.text.toString().trim()
 
             if (name.isEmpty()) {
-                // Use timestamp as default session name
                 val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 name = sdf.format(Date())
             }
@@ -71,10 +80,10 @@ class MainActivity : AppCompatActivity() {
             val leftName = leftNameInput.text.toString().trim().ifEmpty { "Left" }
             val rightName = rightNameInput.text.toString().trim().ifEmpty { "Right" }
 
-            sessions.add(SessionAdapter.Session(name, leftName, rightName, leftScore, rightScore))
+            sessions.add(0, SessionAdapter.Session(name, leftName, rightName, leftScore, rightScore))
             adapter.notifyDataSetChanged()
+            saveSessions()
 
-            // Clear scores and inputs for next session
             leftScore = 0
             rightScore = 0
             scoreLeft.text = "0"
@@ -82,6 +91,15 @@ class MainActivity : AppCompatActivity() {
             leftNameInput.text.clear()
             rightNameInput.text.clear()
             sessionInput.text.clear()
+
+            // Hide keyboard
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            currentFocus?.let { view ->
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+
+            // Reset highlight after save
+            clearScoreHighlights()
         }
     }
 
@@ -89,9 +107,40 @@ class MainActivity : AppCompatActivity() {
         if (isLeft) {
             leftScore = (leftScore + delta).coerceAtLeast(0)
             scoreLeft.text = leftScore.toString()
+            highlightLastScore(true)
         } else {
             rightScore = (rightScore + delta).coerceAtLeast(0)
             scoreRight.text = rightScore.toString()
+            highlightLastScore(false)
+        }
+    }
+
+    private fun highlightLastScore(isLeft: Boolean) {
+        val highlightDrawable = ContextCompat.getDrawable(this, R.drawable.bg_last_score)
+        val transparent = ContextCompat.getDrawable(this, android.R.color.transparent)
+
+        scoreLeft.background = if (isLeft) highlightDrawable else transparent
+        scoreRight.background = if (!isLeft) highlightDrawable else transparent
+    }
+
+    private fun clearScoreHighlights() {
+        val transparent = ContextCompat.getDrawable(this, android.R.color.transparent)
+        scoreLeft.background = transparent
+        scoreRight.background = transparent
+    }
+
+    private fun saveSessions() {
+        val json = Gson().toJson(sessions)
+        prefs.edit().putString("saved_sessions", json).apply()
+    }
+
+    private fun loadSessions() {
+        val json = prefs.getString("saved_sessions", null)
+        if (json != null) {
+            val type = object : TypeToken<MutableList<SessionAdapter.Session>>() {}.type
+            val loaded = Gson().fromJson<MutableList<SessionAdapter.Session>>(json, type)
+            sessions.clear()
+            sessions.addAll(loaded)
         }
     }
 }
