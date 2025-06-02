@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         sessionList = findViewById(R.id.session_list)
         darkSwitch = findViewById(R.id.switch_dark_mode)
 
-        // Restore scores and highlight if available
         if (savedInstanceState != null) {
             leftScore = savedInstanceState.getInt("leftScore", 0)
             rightScore = savedInstanceState.getInt("rightScore", 0)
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         scoreLeft.text = leftScore.toString()
         scoreRight.text = rightScore.toString()
 
-        // Restore highlight
         lastHighlightedLeft?.let { highlightLastScore(it) }
 
         darkSwitch.isChecked = isDark
@@ -78,14 +76,25 @@ class MainActivity : AppCompatActivity() {
         }
         sessionList.adapter = adapter
 
-        // Load previously saved sessions
         loadSessions()
         adapter.notifyDataSetChanged()
 
-        findViewById<Button>(R.id.btn_left_up).setOnClickListener { updateScore(true, 1) }
-        findViewById<Button>(R.id.btn_left_down).setOnClickListener { updateScore(true, -1) }
-        findViewById<Button>(R.id.btn_right_up).setOnClickListener { updateScore(false, 1) }
-        findViewById<Button>(R.id.btn_right_down).setOnClickListener { updateScore(false, -1) }
+        findViewById<Button>(R.id.btn_left_up).setOnClickListener {
+            updateScore(true, 1)
+            hideKeyboard()
+        }
+        findViewById<Button>(R.id.btn_left_down).setOnClickListener {
+            updateScore(true, -1)
+            hideKeyboard()
+        }
+        findViewById<Button>(R.id.btn_right_up).setOnClickListener {
+            updateScore(false, 1)
+            hideKeyboard()
+        }
+        findViewById<Button>(R.id.btn_right_down).setOnClickListener {
+            updateScore(false, -1)
+            hideKeyboard()
+        }
 
         findViewById<Button>(R.id.btn_save_session).setOnClickListener {
             var name = sessionInput.text.toString().trim()
@@ -110,13 +119,7 @@ class MainActivity : AppCompatActivity() {
             rightNameInput.text.clear()
             sessionInput.text.clear()
 
-            // Hide keyboard
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            currentFocus?.let { view ->
-                imm.hideSoftInputFromWindow(view.windowToken, 0)
-            }
-
-            // Reset highlight after save
+            hideKeyboard()
             clearScoreHighlights()
         }
     }
@@ -170,5 +173,30 @@ class MainActivity : AppCompatActivity() {
             sessions.clear()
             sessions.addAll(loaded)
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        currentFocus?.let { view ->
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
+        if (ev.action == android.view.MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = android.graphics.Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                    v.clearFocus()
+
+                    // Hide keyboard
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }
