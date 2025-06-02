@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="16dp"
     android:layout_width="match_parent"
@@ -9,7 +10,8 @@
         android:id="@+id/switch_dark_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dark Mode" />
+        android:text="@string/dark_mode"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +30,7 @@
 
             <EditText
                 android:id="@+id/edit_left_name"
-                android:hint="Left side name"
+                android:hint="@string/left_side_name"
                 android:maxLength="10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,7 +40,7 @@
 
             <Button
                 android:id="@+id/btn_left_up"
-                android:text="+"
+                android:text="@string/increment_left"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -49,7 +51,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/score_left"
-                    android:text="0"
+                    android:text="@string/default_score_left"
                     android:textSize="80sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -65,7 +67,7 @@
 
             <Button
                 android:id="@+id/btn_left_down"
-                android:text="-"
+                android:text="@string/decrement_left"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -81,7 +83,7 @@
 
             <EditText
                 android:id="@+id/edit_right_name"
-                android:hint="Right side name"
+                android:hint="@string/right_side_name"
                 android:maxLength="10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,7 +93,7 @@
 
             <Button
                 android:id="@+id/btn_right_up"
-                android:text="+"
+                android:text="@string/increment_right"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -102,7 +104,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/score_right"
-                    android:text="0"
+                    android:text="@string/default_score_right"
                     android:textSize="80sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -118,7 +120,7 @@
 
             <Button
                 android:id="@+id/btn_right_down"
-                android:text="-"
+                android:text="@string/decrement_right"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -127,14 +129,14 @@
 
     <EditText
         android:id="@+id/edit_session_name"
-        android:hint="Session name"
+        android:hint="@string/session_name"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_save_session"
-        android:text="Save Session"
+        android:text="@string/save_session"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

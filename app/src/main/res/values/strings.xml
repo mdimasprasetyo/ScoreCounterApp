@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Score Counter</string>
     <string name="session_score_text">%1$s: %2$d, %3$s: %4$d</string>
+    <string name="left_side_name">Left side name</string>
+    <string name="increment_left">+</string>
+    <string name="default_score_left">0</string>
+    <string name="decrement_left">-</string>
+    <string name="right_side_name">Right side name</string>
+    <string name="increment_right">+</string>
+    <string name="default_score_right">0</string>
+    <string name="decrement_right">-</string>
+    <string name="session_name">Session name</string>
+    <string name="save_session">Save Session</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>
