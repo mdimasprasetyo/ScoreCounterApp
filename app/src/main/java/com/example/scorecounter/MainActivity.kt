@@ -1,5 +1,6 @@
 package com.example.scorecounter
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
@@ -11,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rightNameInput: EditText
     private lateinit var sessionInput: EditText
     private lateinit var sessionList: ListView
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var darkSwitch: Switch
 
     private lateinit var prefs: SharedPreferences
@@ -65,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         darkSwitch.isChecked = isDark
         darkSwitch.setOnCheckedChangeListener { _, checked ->
-            prefs.edit().putBoolean("dark_mode", checked).apply()
+            prefs.edit { putBoolean("dark_mode", checked) }
             AppCompatDelegate.setDefaultNightMode(
                 if (checked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
             )
@@ -162,7 +165,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveSessions() {
         val json = Gson().toJson(sessions)
-        prefs.edit().putString("saved_sessions", json).apply()
+        prefs.edit { putString("saved_sessions", json) }
     }
 
     private fun loadSessions() {
