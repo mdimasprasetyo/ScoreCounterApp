@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
     private lateinit var adapter: SessionAdapter
     private val sessions = mutableListOf<SessionAdapter.Session>()
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = getSharedPreferences("score_prefs", MODE_PRIVATE)
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         sessionList.adapter = adapter
 
         loadSessions()
-        adapter.notifyDataSetChanged()
 
         findViewById<Button>(R.id.btn_left_up).setOnClickListener {
             updateScore(true, 1)
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveSessions() {
-        val json = Gson().toJson(sessions)
+        val json = gson.toJson(sessions)
         prefs.edit { putString("saved_sessions", json) }
     }
 
@@ -172,10 +172,11 @@ class MainActivity : AppCompatActivity() {
         val json = prefs.getString("saved_sessions", null)
         if (json != null) {
             val type = object : TypeToken<MutableList<SessionAdapter.Session>>() {}.type
-            val loaded = Gson().fromJson<MutableList<SessionAdapter.Session>>(json, type)
+            val loaded = gson.fromJson<MutableList<SessionAdapter.Session>>(json, type)
             sessions.clear()
             sessions.addAll(loaded)
         }
+        adapter.notifyDataSetChanged()
     }
 
     private fun hideKeyboard() {
