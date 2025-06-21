@@ -12,4 +12,5 @@
     <string name="session_name">Session name</string>
     <string name="save_session">Save Session</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="reset">Reset</string>
 </resources>
