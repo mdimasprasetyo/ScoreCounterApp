@@ -10,6 +10,7 @@ An Android app written in Kotlin to keep track of scores for two sides. Designed
 - Delete saved sessions using a trash icon (via long-press on session)
 - Dark mode toggle
 - Responsive and simple UI
+- Reset button to reset scores, text input (side name and session name), and clear score highlight (Update 20250621)
 
 ## How to Use
 
