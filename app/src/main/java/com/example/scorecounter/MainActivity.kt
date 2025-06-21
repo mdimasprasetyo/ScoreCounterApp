@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -125,6 +126,10 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard()
             clearScoreHighlights()
         }
+
+        findViewById<Button>(R.id.btn_reset_scores).setOnClickListener {
+            showResetConfirmationDialog()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -184,6 +189,29 @@ class MainActivity : AppCompatActivity() {
         currentFocus?.let { view ->
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    private fun showResetConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Reset Scores?")
+            .setMessage("This will clear scores, names, session input, and highlights. Are you sure?")
+            .setPositiveButton("Yes") { _, _ ->
+                resetScoresAndInputs()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun resetScoresAndInputs() {
+        leftScore = 0
+        rightScore = 0
+        scoreLeft.text = "0"
+        scoreRight.text = "0"
+        leftNameInput.text.clear()
+        rightNameInput.text.clear()
+        sessionInput.text.clear()
+        clearScoreHighlights()
+        hideKeyboard()
     }
 
     override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {

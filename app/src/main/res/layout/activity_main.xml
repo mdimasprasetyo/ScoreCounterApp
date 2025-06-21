@@ -6,12 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Switch
-        android:id="@+id/switch_dark_mode"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dark_mode"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        android:layout_marginBottom="8dp">
+
+        <Switch
+            android:id="@+id/switch_dark_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dark_mode"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+        <Button
+            android:id="@+id/btn_reset_scores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset"
+            android:backgroundTint="#f44336"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
