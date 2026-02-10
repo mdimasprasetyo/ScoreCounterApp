@@ -58,15 +58,15 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             leftScore = savedInstanceState.getInt("leftScore", 0)
             rightScore = savedInstanceState.getInt("rightScore", 0)
-            lastHighlightedLeft = if (savedInstanceState.containsKey("lastHighlightedLeft")) {
-                savedInstanceState.getBoolean("lastHighlightedLeft")
-            } else null
+            if (savedInstanceState.getBoolean("hasHighlight", false)) {
+                val wasLeft = savedInstanceState.getBoolean("lastHighlightedLeft")
+                lastHighlightedLeft = wasLeft
+                highlightLastScore(wasLeft)
+            }
         }
 
         scoreLeft.text = leftScore.toString()
         scoreRight.text = rightScore.toString()
-
-        lastHighlightedLeft?.let { highlightLastScore(it) }
 
         darkSwitch.isChecked = isDark
         darkSwitch.setOnCheckedChangeListener { _, checked ->
@@ -136,7 +136,10 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt("leftScore", leftScore)
         outState.putInt("rightScore", rightScore)
-        lastHighlightedLeft?.let { outState.putBoolean("lastHighlightedLeft", it) }
+        lastHighlightedLeft?.let {
+            outState.putBoolean("hasHighlight", true)
+            outState.putBoolean("lastHighlightedLeft", it)
+        }
     }
 
     private fun updateScore(isLeft: Boolean, delta: Int) {
