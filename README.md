@@ -1,7 +1,7 @@
 # ScoreCounterApp
 
-A simple two-sided score counter for Android. Tap **+** or **−** for the left or right side, name
-each side if you like, and save the result as a session you can rename or delete later. Works for
+A simple two-sided score counter for Android. Tap a score (or **+** / **−**) for the left or right
+side, name each side if you like, and save the result as a session you can rename or delete later. Works for
 any game where two sides keep a running score.
 
 - Kotlin, classic Android Views (XML layouts), Material Components, minSdk 21 (Android 5.0), targetSdk 34
@@ -9,6 +9,8 @@ any game where two sides keep a running score.
 - No network permission, no login, no ads, no analytics
 - Sessions and the dark-mode setting saved on the device with SharedPreferences (JSON via Gson)
 - The side that scored last is highlighted; scores never go below 0
+- Undo for every point, haptic feedback, optional keep-screen-on
+- The game in progress survives the app being closed or killed
 
 ## Project layout
 
@@ -17,7 +19,7 @@ ScoreCounterApp/
 └── app/                             Android app
     └── src/main/
         ├── java/com/example/scorecounter/
-        │   ├── MainActivity.kt      Scores, highlight, save/reset, dark mode, persistence
+        │   ├── MainActivity.kt      Scores, undo, highlight, save/reset, dark mode, keep-awake, persistence
         │   └── SessionAdapter.kt    Saved-sessions list, long-press rename / delete, Session model
         └── res/
             ├── layout/              activity_main.xml (portrait)
@@ -28,9 +30,10 @@ ScoreCounterApp/
 
 ### Architecture in one paragraph
 
-`MainActivity` holds the two scores and which side scored last. Every **+** / **−** goes through
-`updateScore(isLeft, delta)`, which clamps at 0, updates the number and moves the highlight. Scores
-and the highlight survive screen rotation through `onSaveInstanceState`. Saved sessions are a list
+`MainActivity` holds the two scores and which side scored last. Every tap, **+** or **−** goes
+through `updateScore(isLeft, delta)`, which clamps at 0, pushes the previous state onto the undo
+stack, updates the number, moves the highlight on a point, and writes the live game to
+SharedPreferences, so it survives rotation and the app being killed. Saved sessions are a list
 of `Session(name, leftName, rightName, leftScore, rightScore)`, newest first, stored as one JSON
 string in SharedPreferences and rewritten whenever a session is added, renamed or deleted.
 `SessionAdapter` renders the list and reports changes back so they are saved straight away.
@@ -39,12 +42,19 @@ string in SharedPreferences and rewritten whenever a session is added, renamed o
 
 | Behaviour | Where |
 |---|---|
-| **+** / **−** per side, never below 0 | `MainActivity.updateScore` |
-| Last side to score is highlighted | `highlightLastScore` |
+| Tap anywhere on a score to add a point | `score_left_area` / `score_right_area` |
+| **+** / **−** per side, never below 0; **−** at 0 does nothing | `MainActivity.updateScore` |
+| Last side to *score* (+1) is highlighted; a correction (−1) doesn't move it | `updateScore` |
+| **Undo** steps back through every score change, highlight included (up to 200) | `undoLastChange` |
+| Haptic tick on every point and undo | `onScoreTap` |
+| Scores, highlight and side names saved on every change; restored after the app is killed | `persistLiveScore`, `restoreLiveGame` |
+| **Keep screen on** switch, remembered between launches | `applyKeepScreenOn` |
 | Optional side names (default *Left* / *Right*) | Save Session handler |
 | Session name optional; blank uses a `yyyy-MM-dd HH:mm:ss` timestamp | Save Session handler |
 | Saving a session resets scores, names and highlight for the next game | Save Session handler |
-| Long-press a saved session → **Edit Name** or **Delete** | `SessionAdapter.showOptionsDialog` |
+| Each saved session stores its date and time, shown under the score | `Session.savedAt` |
+| Long-press a saved session → **Edit Name** or **Delete** (with **Undo** snackbar) | `SessionAdapter.showOptionsDialog` |
+| Renaming to a blank name keeps the old name | `SessionAdapter.showEditDialog` |
 | **Reset** (with confirmation) clears scores, names, session name and highlight without saving | `showResetConfirmationDialog` |
 | Dark mode switch, remembered between launches | `onCreate` |
 | Tapping outside a text field hides the keyboard | `dispatchTouchEvent` |
@@ -86,12 +96,16 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ## Using the app
 
 1. Optionally type a name for each side.
-2. Tap **+** or **−** under each score. The side that scored last is highlighted.
+2. Tap a score to add a point (or use **+** / **−**). The side that scored last is highlighted.
+   Mis-tap? Hit **Undo**.
 3. Optionally type a session name, then tap **Save Session**. The result appears at the top of the
    list and the board clears for the next game.
 4. Long-press a saved session to rename or delete it.
-5. **Reset** clears the board without saving. The **Dark Mode** switch at the top changes the theme.
+5. **Reset** clears the board without saving. **Dark Mode** changes the theme; **Keep screen on**
+   stops the phone sleeping mid-game.
 
 ## Changelog
 
+- v1.1: tap-to-score, Undo, haptics, keep-screen-on; live game survives the app being killed;
+  minus no longer moves the highlight; delete has Undo; blank renames ignored; sessions store their date.
 - 2025-06-21: **Reset** button clears scores, side names, session name and the score highlight.
