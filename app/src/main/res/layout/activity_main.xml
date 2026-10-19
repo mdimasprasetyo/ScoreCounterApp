@@ -3,15 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
+    android:background="@color/navy"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/main_menu"
-        app:title="@string/app_name" />
+        android:layout_height="52dp"
+        android:fontFamily="@font/jakarta_extrabold"
+        android:gravity="center"
+        android:letterSpacing="0.2"
+        android:text="@string/title_caps"
+        android:textColor="@color/volt"
+        android:textSize="15sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,167 +27,56 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="320dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView
+            <include
                 android:id="@+id/card_left"
-                style="@style/Widget.ScoreCounter.ScoreCard"
+                layout="@layout/view_side_card"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="6dp"
-                android:contentDescription="@string/tap_to_score">
+                android:layout_weight="1" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <EditText
-                        android:id="@+id/edit_left_name"
-                        style="@style/Widget.ScoreCounter.NameField"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/left_side_name" />
-
-                    <TextView
-                        android:id="@+id/label_left_last"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/last_point"
-                        android:textAllCaps="true"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorPrimary"
-                        android:visibility="invisible" />
-
-                    <TextView
-                        android:id="@+id/score_left"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="@string/default_score_left"
-                        android:textAppearance="@style/TextAppearance.ScoreCounter.Score"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="@string/tap_to_score"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_left_down"
-                            style="@style/Widget.ScoreCounter.RoundButton.Tonal"
-                            android:layout_marginEnd="12dp"
-                            android:contentDescription="@string/remove_point"
-                            app:icon="@drawable/ic_remove" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_left_up"
-                            style="@style/Widget.ScoreCounter.RoundButton"
-                            android:contentDescription="@string/add_point"
-                            app:icon="@drawable/ic_add" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
+            <include
                 android:id="@+id/card_right"
-                style="@style/Widget.ScoreCounter.ScoreCard"
+                layout="@layout/view_side_card"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:layout_marginStart="6dp"
-                android:contentDescription="@string/tap_to_score">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <EditText
-                        android:id="@+id/edit_right_name"
-                        style="@style/Widget.ScoreCounter.NameField"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/right_side_name" />
-
-                    <TextView
-                        android:id="@+id/label_right_last"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/last_point"
-                        android:textAllCaps="true"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorPrimary"
-                        android:visibility="invisible" />
-
-                    <TextView
-                        android:id="@+id/score_right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="@string/default_score_right"
-                        android:textAppearance="@style/TextAppearance.ScoreCounter.Score"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="@string/tap_to_score"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_right_down"
-                            style="@style/Widget.ScoreCounter.RoundButton.Tonal"
-                            android:layout_marginEnd="12dp"
-                            android:contentDescription="@string/remove_point"
-                            app:icon="@drawable/ic_remove" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_right_up"
-                            style="@style/Widget.ScoreCounter.RoundButton"
-                            android:contentDescription="@string/add_point"
-                            app:icon="@drawable/ic_add" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_weight="1" />
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_undo"
-            style="@style/Widget.Material3.Button.TonalButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/undo_last_point"
-            app:icon="@drawable/ic_undo" />
+            android:orientation="horizontal">
+        
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_undo"
+                style="@style/Widget.ScoreCounter.ToolButton"
+                android:layout_width="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="@string/tool_undo" />
+        
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_reset"
+                style="@style/Widget.ScoreCounter.ToolButton"
+                android:layout_width="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="@string/tool_reset" />
+        
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_settings"
+                style="@style/Widget.ScoreCounter.ToolButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/tool_settings" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -194,57 +86,64 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/session_name">
-
+            android:hint="@string/session_name"
+            app:boxCornerRadiusBottomEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusTopStart="14dp"
+            app:boxStrokeColor="@color/volt"
+            app:hintTextColor="@color/volt">
+        
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_session_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/jakarta_medium"
                 android:imeOptions="actionDone|flagNoExtractUi"
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="@color/white" />
         </com.google.android.material.textfield.TextInputLayout>
-
+        
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_session"
+            style="@style/Widget.ScoreCounter.BigButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/save_session"
-            app:icon="@drawable/ic_save" />
-
+            android:layout_marginTop="10dp"
+            android:text="@string/save_session" />
+        
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/saved_sessions"
-            android:textAppearance="?attr/textAppearanceTitleSmall"
-            android:textColor="?attr/colorOnSurfaceVariant" />
-
+            android:textColor="@color/muted"
+            android:textSize="14sp" />
+        
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
+        
             <ListView
                 android:id="@+id/session_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="false"
                 android:divider="@null"
-                android:dividerHeight="8dp" />
-
+                android:dividerHeight="10dp"
+                android:listSelector="@android:color/transparent" />
+        
             <TextView
                 android:id="@+id/empty_sessions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="@string/no_sessions"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
