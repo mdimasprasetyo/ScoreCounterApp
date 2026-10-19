@@ -1,47 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:orientation="vertical"
     android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <!-- Top bar: switches on the left, Undo + Reset on the right -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_marginBottom="8dp">
 
-        <Switch
-            android:id="@+id/switch_dark_mode"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/switch_dark_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dark_mode"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Switch
+                android:id="@+id/switch_keep_screen_on"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/keep_screen_on"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_undo"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dark_mode"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            android:layout_marginEnd="8dp"
+            android:text="@string/undo" />
+
         <Button
             android:id="@+id/btn_reset_scores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reset"
-            android:backgroundTint="#f44336"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            tools:ignore="RelativeOverlap" />
-    </RelativeLayout>
+            android:backgroundTint="#f44336" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:baselineAligned="false"
+        android:layout_marginTop="8dp">
 
         <!-- Left Side -->
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="4dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
@@ -49,23 +74,23 @@
                 android:id="@+id/edit_left_name"
                 android:hint="@string/left_side_name"
                 android:maxLength="10"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"
-                android:inputType="textCapWords" />
+                android:layout_marginBottom="8dp"
+                android:inputType="textCapWords"
+                android:importantForAutofill="no" />
 
-            <Button
-                android:id="@+id/btn_left_up"
-                android:text="@string/increment_left"
-                android:textSize="30sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
+            <!-- Whole area is the tap target: tap = +1 -->
             <FrameLayout
-                android:layout_marginVertical="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/score_left_area"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/tap_to_score"
+                android:foreground="?attr/selectableItemBackground">
+
                 <TextView
                     android:id="@+id/score_left"
                     android:text="@string/default_score_left"
@@ -80,21 +105,46 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="@string/tap_to_score"
+                    android:textSize="12sp"
+                    android:alpha="0.6"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </FrameLayout>
 
-            <Button
-                android:id="@+id/btn_left_down"
-                android:text="@string/decrement_left"
-                android:textSize="30sp"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btn_left_down"
+                    android:text="@string/decrement_left"
+                    android:textSize="30sp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btn_left_up"
+                    android:text="@string/increment_left"
+                    android:textSize="30sp"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Right Side -->
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="4dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
@@ -102,23 +152,22 @@
                 android:id="@+id/edit_right_name"
                 android:hint="@string/right_side_name"
                 android:maxLength="10"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"
-                android:inputType="textCapWords" />
-
-            <Button
-                android:id="@+id/btn_right_up"
-                android:text="@string/increment_right"
-                android:textSize="30sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="8dp"
+                android:inputType="textCapWords"
+                android:importantForAutofill="no" />
 
             <FrameLayout
-                android:layout_marginVertical="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/score_right_area"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/tap_to_score"
+                android:foreground="?attr/selectableItemBackground">
+
                 <TextView
                     android:id="@+id/score_right"
                     android:text="@string/default_score_right"
@@ -133,14 +182,38 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="@string/tap_to_score"
+                    android:textSize="12sp"
+                    android:alpha="0.6"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </FrameLayout>
 
-            <Button
-                android:id="@+id/btn_right_down"
-                android:text="@string/decrement_right"
-                android:textSize="30sp"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btn_right_down"
+                    android:text="@string/decrement_right"
+                    android:textSize="30sp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btn_right_up"
+                    android:text="@string/increment_right"
+                    android:textSize="30sp"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -149,7 +222,9 @@
         android:hint="@string/session_name"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/btn_save_session"
