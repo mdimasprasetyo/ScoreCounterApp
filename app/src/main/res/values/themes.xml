@@ -19,8 +19,8 @@
         <item name="colorOutline">@color/muted</item>
         <item name="android:statusBarColor">@color/navy</item>
         <item name="android:navigationBarColor">@color/navy</item>
+        <!-- Only android:fontFamily here: the app-namespace fontFamily would override every view's own font -->
         <item name="android:fontFamily">@font/jakarta</item>
-        <item name="fontFamily">@font/jakarta</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.ScoreCounter.Dialog</item>
     </style>
 
@@ -28,7 +28,6 @@
         <item name="colorSurface">@color/panel</item>
         <item name="colorPrimary">@color/volt</item>
         <item name="android:fontFamily">@font/jakarta</item>
-        <item name="fontFamily">@font/jakarta</item>
     </style>
 
     <!-- Side panel: rounded 18dp, flat, Panel colour -->
@@ -72,6 +71,10 @@
         <item name="android:letterSpacing">0</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">1</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">6dp</item>
+        <item name="iconSize">18dp</item>
+        <item name="iconTint">@color/white</item>
     </style>
 
     <style name="Widget.ScoreCounter.NameField" parent="">
@@ -90,7 +93,7 @@
     </style>
 
     <!-- Scoreboard digits: Barlow Condensed ExtraBold, tabular figures (Pickles ScoreDigits) -->
-    <style name="TextAppearance.ScoreCounter.Digits" parent="">
+    <style name="Widget.ScoreCounter.Digits" parent="">
         <item name="android:fontFamily">@font/barlow_condensed_extrabold</item>
         <item name="android:textSize">@dimen/score_digits</item>
         <item name="android:textColor">@color/white</item>
@@ -98,7 +101,7 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <style name="TextAppearance.ScoreCounter.Tag" parent="">
+    <style name="Widget.ScoreCounter.Tag" parent="">
         <item name="android:fontFamily">@font/jakarta_extrabold</item>
         <item name="android:textSize">12sp</item>
         <item name="android:letterSpacing">0.08</item>
