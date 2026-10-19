@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 palette (indigo seed), light -->
-    <color name="md_primary">#4355B9</color>
-    <color name="md_on_primary">#FFFFFF</color>
-    <color name="md_primary_container">#DEE0FF</color>
-    <color name="md_on_primary_container">#00105C</color>
-    <color name="md_secondary">#5B5D72</color>
-    <color name="md_on_secondary">#FFFFFF</color>
-    <color name="md_secondary_container">#E0E1F9</color>
-    <color name="md_on_secondary_container">#181A2C</color>
-    <color name="md_error">#BA1A1A</color>
-    <color name="md_background">#FBF8FF</color>
-    <color name="md_surface">#FBF8FF</color>
-    <color name="md_on_surface">#1B1B21</color>
-    <color name="md_surface_variant">#E3E1EC</color>
-    <color name="md_on_surface_variant">#46464F</color>
-    <color name="md_outline">#767680</color>
-    <color name="md_outline_variant">#C7C5D0</color>
-    <!-- Score cards -->
-    <color name="card_idle">#F2EFF7</color>
+    <!-- Same palette as Pickles -->
+    <color name="navy">#0B1426</color>
+    <color name="panel">#14213A</color>
+    <color name="panel_high">#1D2E50</color>
+    <color name="volt">#C6F432</color>
+    <color name="side_left">#FFB300</color>
+    <color name="side_right">#29B6F6</color>
+    <color name="muted">#9FB0CC</color>
+    <color name="danger">#FF6B6B</color>
+    <color name="white">#FFFFFF</color>
 </resources>
