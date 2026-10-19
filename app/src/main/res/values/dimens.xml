@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="score_highlight_padding_horizontal">12dp</dimen>
-    <dimen name="score_highlight_padding_vertical">4dp</dimen>
+    <dimen name="score_digits">120sp</dimen>
 </resources>
