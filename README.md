@@ -20,13 +20,13 @@ ScoreCounterApp/
 └── app/                             Android app
     └── src/main/
         ├── java/com/example/scorecounter/
-        │   ├── MainActivity.kt      Scores, undo, highlight, save/reset, dark mode, keep-awake, persistence
+        │   ├── MainActivity.kt      Scores, undo, highlight, save/reset, settings, keep-awake, persistence
         │   └── SessionAdapter.kt    Saved-sessions list, long-press rename / delete, Session model
         └── res/
-            ├── layout/              activity_main.xml (portrait)
+            ├── layout/              activity_main.xml (portrait), view_side_card.xml, item_session.xml
             ├── layout-land/         activity_main.xml (landscape)
-            ├── values/, values-night/   Colours, strings, dimensions, theme (light and dark)
-            └── drawable/            bg_last_score.xml (last-scored highlight)
+            ├── font/                Plus Jakarta Sans + Barlow Condensed (OFL, licences in assets/)
+            └── values/              Pickles palette, strings, dimensions, dark theme
 ```
 
 ### Architecture in one paragraph
@@ -49,7 +49,6 @@ string in SharedPreferences and rewritten whenever a session is added, renamed o
 | **Undo** steps back through every score change, highlight included (up to 200) | `undoLastChange` |
 | Haptic tick on every point and undo | `onScoreTap` |
 | Scores, highlight and side names saved on every change; restored after the app is killed | `persistLiveScore`, `restoreLiveGame` |
-| **Keep screen on** switch, remembered between launches | `applyKeepScreenOn` |
 | Optional side names (default *Left* / *Right*) | Save Session handler |
 | Session name optional; blank uses a `yyyy-MM-dd HH:mm:ss` timestamp | Save Session handler |
 | Saving a session resets scores, names and highlight for the next game | Save Session handler |
@@ -57,7 +56,7 @@ string in SharedPreferences and rewritten whenever a session is added, renamed o
 | Long-press a saved session → **Edit Name** or **Delete** (with **Undo** snackbar) | `SessionAdapter.showOptionsDialog` |
 | Renaming to a blank name keeps the old name | `SessionAdapter.showEditDialog` |
 | **Reset** (with confirmation) clears scores, names, session name and highlight without saving | `showResetConfirmationDialog` |
-| Dark mode switch, remembered between launches | `onCreate` |
+| Settings → **Keep screen on**, remembered between launches | `showSettingsDialog` |
 | Tapping outside a text field hides the keyboard | `dispatchTouchEvent` |
 
 ## Build
