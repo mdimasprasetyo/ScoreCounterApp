@@ -13,4 +13,10 @@
     <string name="save_session">Save Session</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="reset">Reset</string>
+    <string name="keep_screen_on">Keep screen on</string>
+    <string name="undo">Undo</string>
+    <string name="tap_to_score">Tap to score</string>
+    <string name="session_score_text_dated">%1$s: %2$d, %3$s: %4$d · %5$s</string>
+    <string name="session_deleted">Session deleted</string>
+    <string name="nothing_to_undo">Nothing to undo</string>
 </resources>
