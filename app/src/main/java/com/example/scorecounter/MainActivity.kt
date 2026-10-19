@@ -1,6 +1,5 @@
 package com.example.scorecounter
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -10,10 +9,12 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.card.MaterialCardView
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -40,10 +41,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rightNameInput: EditText
     private lateinit var sessionInput: EditText
     private lateinit var sessionList: ListView
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    private lateinit var darkSwitch: Switch
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    private lateinit var keepScreenOnSwitch: Switch
+    private lateinit var cardLeft: MaterialCardView
+    private lateinit var cardRight: MaterialCardView
+    private lateinit var labelLeftLast: TextView
+    private lateinit var labelRightLast: TextView
 
     private lateinit var prefs: SharedPreferences
     private lateinit var adapter: SessionAdapter
@@ -66,40 +67,60 @@ class MainActivity : AppCompatActivity() {
         rightNameInput = findViewById(R.id.edit_right_name)
         sessionInput = findViewById(R.id.edit_session_name)
         sessionList = findViewById(R.id.session_list)
-        darkSwitch = findViewById(R.id.switch_dark_mode)
-        keepScreenOnSwitch = findViewById(R.id.switch_keep_screen_on)
+        cardLeft = findViewById(R.id.card_left)
+        cardRight = findViewById(R.id.card_right)
+        labelLeftLast = findViewById(R.id.label_left_last)
+        labelRightLast = findViewById(R.id.label_right_last)
 
         // The live game is stored on every change, so it survives rotation AND the app being killed
         restoreLiveGame()
         savedInstanceState?.getIntArray(KEY_UNDO_STACK)?.let { restoreUndoStack(it) }
         renderScores()
 
-        darkSwitch.isChecked = isDark
-        darkSwitch.setOnCheckedChangeListener { _, checked ->
-            prefs.edit { putBoolean(KEY_DARK_MODE, checked) }
-            AppCompatDelegate.setDefaultNightMode(
-                if (checked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-            )
-        }
-
         val keepScreenOn = prefs.getBoolean(KEY_KEEP_SCREEN_ON, false)
-        keepScreenOnSwitch.isChecked = keepScreenOn
         applyKeepScreenOn(keepScreenOn)
-        keepScreenOnSwitch.setOnCheckedChangeListener { _, checked ->
-            prefs.edit { putBoolean(KEY_KEEP_SCREEN_ON, checked) }
-            applyKeepScreenOn(checked)
+
+        // Top bar: Reset as an icon, Dark mode / Keep screen on in the overflow menu
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.menu.findItem(R.id.action_dark_mode).isChecked = isDark
+        toolbar.menu.findItem(R.id.action_keep_screen_on).isChecked = keepScreenOn
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_reset -> {
+                    showResetConfirmationDialog()
+                    true
+                }
+                R.id.action_dark_mode -> {
+                    val checked = !item.isChecked
+                    item.isChecked = checked
+                    prefs.edit { putBoolean(KEY_DARK_MODE, checked) }
+                    AppCompatDelegate.setDefaultNightMode(
+                        if (checked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                    )
+                    true
+                }
+                R.id.action_keep_screen_on -> {
+                    val checked = !item.isChecked
+                    item.isChecked = checked
+                    prefs.edit { putBoolean(KEY_KEEP_SCREEN_ON, checked) }
+                    applyKeepScreenOn(checked)
+                    true
+                }
+                else -> false
+            }
         }
 
         adapter = SessionAdapter(this, sessions) {
             saveSessions()
         }
         sessionList.adapter = adapter
+        sessionList.emptyView = findViewById(R.id.empty_sessions)
 
         loadSessions()
 
-        // Tap anywhere on a score to add a point
-        findViewById<View>(R.id.score_left_area).setOnClickListener { onScoreTap(it, true, 1) }
-        findViewById<View>(R.id.score_right_area).setOnClickListener { onScoreTap(it, false, 1) }
+        // Tap anywhere on a score card to add a point
+        cardLeft.setOnClickListener { onScoreTap(it, true, 1) }
+        cardRight.setOnClickListener { onScoreTap(it, false, 1) }
 
         findViewById<Button>(R.id.btn_left_up).setOnClickListener { onScoreTap(it, true, 1) }
         findViewById<Button>(R.id.btn_left_down).setOnClickListener { onScoreTap(it, true, -1) }
@@ -113,10 +134,6 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_save_session).setOnClickListener {
             saveCurrentSession()
-        }
-
-        findViewById<Button>(R.id.btn_reset_scores).setOnClickListener {
-            showResetConfirmationDialog()
         }
 
         // Side names are part of the live game too
@@ -179,10 +196,26 @@ class MainActivity : AppCompatActivity() {
         scoreLeft.text = leftScore.toString()
         scoreRight.text = rightScore.toString()
 
-        val highlightDrawable = ContextCompat.getDrawable(this, R.drawable.bg_last_score)
-        val transparent = ContextCompat.getDrawable(this, android.R.color.transparent)
-        scoreLeft.background = if (highlight == HIGHLIGHT_LEFT) highlightDrawable else transparent
-        scoreRight.background = if (highlight == HIGHLIGHT_RIGHT) highlightDrawable else transparent
+        styleCard(cardLeft, scoreLeft, labelLeftLast, highlight == HIGHLIGHT_LEFT)
+        styleCard(cardRight, scoreRight, labelRightLast, highlight == HIGHLIGHT_RIGHT)
+    }
+
+    /** The side that scored last gets the primary-container fill, a thicker primary outline and a label. */
+    private fun styleCard(card: MaterialCardView, score: TextView, label: TextView, isLast: Boolean) {
+        val density = resources.displayMetrics.density
+        if (isLast) {
+            card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.md_primary_container))
+            card.strokeColor = ContextCompat.getColor(this, R.color.md_primary)
+            card.strokeWidth = (2 * density).toInt()
+            score.setTextColor(ContextCompat.getColor(this, R.color.md_on_primary_container))
+            label.visibility = View.VISIBLE
+        } else {
+            card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.card_idle))
+            card.strokeColor = ContextCompat.getColor(this, R.color.md_outline_variant)
+            card.strokeWidth = (1 * density).toInt()
+            score.setTextColor(ContextCompat.getColor(this, R.color.md_on_surface))
+            label.visibility = View.INVISIBLE
+        }
     }
 
     // --- Sessions ---
@@ -226,10 +259,10 @@ class MainActivity : AppCompatActivity() {
     // --- Reset ---
 
     private fun showResetConfirmationDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Reset Scores?")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Reset scores?")
             .setMessage("This will clear scores, names, session input, and highlights. Are you sure?")
-            .setPositiveButton("Yes") { _, _ ->
+            .setPositiveButton("Reset") { _, _ ->
                 clearBoard()
             }
             .setNegativeButton("Cancel", null)
