@@ -11,9 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_marginBottom="8dp">
 
             <Switch
@@ -21,20 +23,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dark_mode"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/btn_reset_scores"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Switch
+                android:id="@+id/switch_keep_screen_on"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:text="@string/keep_screen_on"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Button
+                android:id="@+id/btn_undo"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/undo" />
 
             <Button
                 android:id="@+id/btn_reset_scores"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reset"
-                android:backgroundTint="#f44336"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
+                android:backgroundTint="#f44336" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,15 +88,27 @@
                         android:layout_width="60dp"
                         android:layout_height="wrap_content" />
 
-                    <TextView
-                        android:id="@+id/score_left"
-                        android:text="@string/default_score_left"
-                        android:textSize="60sp"
-                        android:textStyle="bold"
-                        android:layout_marginHorizontal="24dp"
-                        android:paddingHorizontal="12dp"
+                    <FrameLayout
+                        android:id="@+id/score_left_area"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:minWidth="120dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/tap_to_score"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:id="@+id/score_left"
+                            android:text="@string/default_score_left"
+                            android:textSize="60sp"
+                            android:textStyle="bold"
+                            android:paddingHorizontal="12dp"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </FrameLayout>
 
                     <Button
                         android:id="@+id/btn_left_up"
@@ -124,15 +150,27 @@
                         android:layout_width="60dp"
                         android:layout_height="wrap_content" />
 
-                    <TextView
-                        android:id="@+id/score_right"
-                        android:text="@string/default_score_right"
-                        android:textSize="60sp"
-                        android:textStyle="bold"
-                        android:layout_marginHorizontal="24dp"
-                        android:paddingHorizontal="12dp"
+                    <FrameLayout
+                        android:id="@+id/score_right_area"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:minWidth="120dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/tap_to_score"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:id="@+id/score_right"
+                            android:text="@string/default_score_right"
+                            android:textSize="60sp"
+                            android:textStyle="bold"
+                            android:paddingHorizontal="12dp"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </FrameLayout>
 
                     <Button
                         android:id="@+id/btn_right_up"
