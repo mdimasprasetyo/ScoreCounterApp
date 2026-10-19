@@ -4,7 +4,7 @@ A simple two-sided score counter for Android. Tap a score (or **+** / **−**) f
 side, name each side if you like, and save the result as a session you can rename or delete later. Works for
 any game where two sides keep a running score.
 
-- Kotlin, classic Android Views (XML layouts), Material Components, minSdk 21 (Android 5.0), targetSdk 34
+- Kotlin, classic Android Views (XML layouts), Material 3 (Material Components), minSdk 21 (Android 5.0), targetSdk 34
 - Portrait and landscape layouts
 - No network permission, no login, no ads, no analytics
 - Sessions and the dark-mode setting saved on the device with SharedPreferences (JSON via Gson)
@@ -101,8 +101,8 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 3. Optionally type a session name, then tap **Save Session**. The result appears at the top of the
    list and the board clears for the next game.
 4. Long-press a saved session to rename or delete it.
-5. **Reset** clears the board without saving. **Dark Mode** changes the theme; **Keep screen on**
-   stops the phone sleeping mid-game.
+5. The reset icon in the top bar clears the board without saving. The ⋮ menu has **Dark mode** and
+   **Keep screen on** (stops the phone sleeping mid-game).
 
 ## Changelog
 
