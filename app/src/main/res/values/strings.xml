@@ -1,22 +1,28 @@
 <resources>
     <string name="app_name">Score Counter</string>
     <string name="session_score_text">%1$s: %2$d, %3$s: %4$d</string>
-    <string name="left_side_name">Left side name</string>
+    <string name="left_side_name">Left side</string>
     <string name="increment_left">+</string>
     <string name="default_score_left">0</string>
     <string name="decrement_left">-</string>
-    <string name="right_side_name">Right side name</string>
+    <string name="right_side_name">Right side</string>
     <string name="increment_right">+</string>
     <string name="default_score_right">0</string>
     <string name="decrement_right">-</string>
-    <string name="session_name">Session name</string>
-    <string name="save_session">Save Session</string>
-    <string name="dark_mode">Dark Mode</string>
+    <string name="session_name">Session name (optional)</string>
+    <string name="save_session">Save session</string>
+    <string name="dark_mode">Dark mode</string>
     <string name="reset">Reset</string>
     <string name="keep_screen_on">Keep screen on</string>
     <string name="undo">Undo</string>
     <string name="tap_to_score">Tap to score</string>
-    <string name="session_score_text_dated">%1$s: %2$d, %3$s: %4$d · %5$s</string>
     <string name="session_deleted">Session deleted</string>
     <string name="nothing_to_undo">Nothing to undo</string>
+    <string name="undo_last_point">Undo last point</string>
+    <string name="last_point">Last point</string>
+    <string name="saved_sessions">Saved sessions</string>
+    <string name="no_sessions">No saved sessions yet. Finish a game and tap Save.</string>
+    <string name="session_score_line">%1$s  %2$d – %4$d  %3$s</string>
+    <string name="add_point">Add a point</string>
+    <string name="remove_point">Remove a point</string>
 </resources>
