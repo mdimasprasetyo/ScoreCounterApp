@@ -11,9 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.core.graphics.ColorUtils
 import com.google.android.material.card.MaterialCardView
 import androidx.core.content.edit
 import com.google.gson.Gson
@@ -45,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cardRight: MaterialCardView
     private lateinit var labelLeftLast: TextView
     private lateinit var labelRightLast: TextView
+    private var leftColor = 0
+    private var rightColor = 0
 
     private lateinit var prefs: SharedPreferences
     private lateinit var adapter: SessionAdapter
@@ -53,24 +54,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = getSharedPreferences("score_prefs", MODE_PRIVATE)
-        val isDark = prefs.getBoolean(KEY_DARK_MODE, false)
-        AppCompatDelegate.setDefaultNightMode(
-            if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-        )
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        scoreLeft = findViewById(R.id.score_left)
-        scoreRight = findViewById(R.id.score_right)
-        leftNameInput = findViewById(R.id.edit_left_name)
-        rightNameInput = findViewById(R.id.edit_right_name)
-        sessionInput = findViewById(R.id.edit_session_name)
-        sessionList = findViewById(R.id.session_list)
+        // Both sides use the same card layout (view_side_card), so look children up inside each card
         cardLeft = findViewById(R.id.card_left)
         cardRight = findViewById(R.id.card_right)
-        labelLeftLast = findViewById(R.id.label_left_last)
-        labelRightLast = findViewById(R.id.label_right_last)
+        scoreLeft = cardLeft.findViewById(R.id.side_score)
+        scoreRight = cardRight.findViewById(R.id.side_score)
+        leftNameInput = cardLeft.findViewById(R.id.side_name)
+        rightNameInput = cardRight.findViewById(R.id.side_name)
+        labelLeftLast = cardLeft.findViewById(R.id.last_pill)
+        labelRightLast = cardRight.findViewById(R.id.last_pill)
+        sessionInput = findViewById(R.id.edit_session_name)
+        sessionList = findViewById(R.id.session_list)
+
+        leftColor = ContextCompat.getColor(this, R.color.side_left)
+        rightColor = ContextCompat.getColor(this, R.color.side_right)
+        setUpSide(cardLeft, R.string.side_left, leftColor)
+        setUpSide(cardRight, R.string.side_right, rightColor)
 
         // The live game is stored on every change, so it survives rotation AND the app being killed
         restoreLiveGame()
@@ -79,36 +81,6 @@ class MainActivity : AppCompatActivity() {
 
         val keepScreenOn = prefs.getBoolean(KEY_KEEP_SCREEN_ON, false)
         applyKeepScreenOn(keepScreenOn)
-
-        // Top bar: Reset as an icon, Dark mode / Keep screen on in the overflow menu
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        toolbar.menu.findItem(R.id.action_dark_mode).isChecked = isDark
-        toolbar.menu.findItem(R.id.action_keep_screen_on).isChecked = keepScreenOn
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_reset -> {
-                    showResetConfirmationDialog()
-                    true
-                }
-                R.id.action_dark_mode -> {
-                    val checked = !item.isChecked
-                    item.isChecked = checked
-                    prefs.edit { putBoolean(KEY_DARK_MODE, checked) }
-                    AppCompatDelegate.setDefaultNightMode(
-                        if (checked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-                    )
-                    true
-                }
-                R.id.action_keep_screen_on -> {
-                    val checked = !item.isChecked
-                    item.isChecked = checked
-                    prefs.edit { putBoolean(KEY_KEEP_SCREEN_ON, checked) }
-                    applyKeepScreenOn(checked)
-                    true
-                }
-                else -> false
-            }
-        }
 
         adapter = SessionAdapter(this, sessions) {
             saveSessions()
@@ -122,10 +94,13 @@ class MainActivity : AppCompatActivity() {
         cardLeft.setOnClickListener { onScoreTap(it, true, 1) }
         cardRight.setOnClickListener { onScoreTap(it, false, 1) }
 
-        findViewById<Button>(R.id.btn_left_up).setOnClickListener { onScoreTap(it, true, 1) }
-        findViewById<Button>(R.id.btn_left_down).setOnClickListener { onScoreTap(it, true, -1) }
-        findViewById<Button>(R.id.btn_right_up).setOnClickListener { onScoreTap(it, false, 1) }
-        findViewById<Button>(R.id.btn_right_down).setOnClickListener { onScoreTap(it, false, -1) }
+        cardLeft.findViewById<Button>(R.id.side_plus).setOnClickListener { onScoreTap(it, true, 1) }
+        cardLeft.findViewById<Button>(R.id.side_minus).setOnClickListener { onScoreTap(it, true, -1) }
+        cardRight.findViewById<Button>(R.id.side_plus).setOnClickListener { onScoreTap(it, false, 1) }
+        cardRight.findViewById<Button>(R.id.side_minus).setOnClickListener { onScoreTap(it, false, -1) }
+
+        findViewById<Button>(R.id.btn_reset).setOnClickListener { showResetConfirmationDialog() }
+        findViewById<Button>(R.id.btn_settings).setOnClickListener { showSettingsDialog() }
 
         findViewById<Button>(R.id.btn_undo).setOnClickListener {
             undoLastChange(it)
@@ -200,20 +175,32 @@ class MainActivity : AppCompatActivity() {
         styleCard(cardRight, scoreRight, labelRightLast, highlight == HIGHLIGHT_RIGHT)
     }
 
-    /** The side that scored last gets the primary-container fill, a thicker primary outline and a label. */
+    /** Side colour on the strip, the tag and the +1 button (amber left, sky right, as in Pickles). */
+    private fun setUpSide(card: MaterialCardView, tagRes: Int, color: Int) {
+        card.findViewById<View>(R.id.side_bar).setBackgroundColor(color)
+        card.findViewById<TextView>(R.id.side_tag).apply {
+            setText(tagRes)
+            setTextColor(color)
+        }
+        card.findViewById<Button>(R.id.side_plus).backgroundTintList =
+            android.content.res.ColorStateList.valueOf(color)
+    }
+
+    /**
+     * The side that scored last gets a faint wash of its colour and the Volt LAST POINT pill,
+     * like the serving row on the Pickles scoreboard.
+     */
     private fun styleCard(card: MaterialCardView, score: TextView, label: TextView, isLast: Boolean) {
-        val density = resources.displayMetrics.density
+        val panel = ContextCompat.getColor(this, R.color.panel)
+        val sideColor = if (card === cardLeft) leftColor else rightColor
+        val white = ContextCompat.getColor(this, R.color.white)
         if (isLast) {
-            card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.md_primary_container))
-            card.strokeColor = ContextCompat.getColor(this, R.color.md_primary)
-            card.strokeWidth = (2 * density).toInt()
-            score.setTextColor(ContextCompat.getColor(this, R.color.md_on_primary_container))
+            card.setCardBackgroundColor(ColorUtils.blendARGB(panel, sideColor, 0.12f))
+            score.setTextColor(white)
             label.visibility = View.VISIBLE
         } else {
-            card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.card_idle))
-            card.strokeColor = ContextCompat.getColor(this, R.color.md_outline_variant)
-            card.strokeWidth = (1 * density).toInt()
-            score.setTextColor(ContextCompat.getColor(this, R.color.md_on_surface))
+            card.setCardBackgroundColor(panel)
+            score.setTextColor(ColorUtils.setAlphaComponent(white, 0xD9))
             label.visibility = View.INVISIBLE
         }
     }
@@ -321,6 +308,18 @@ class MainActivity : AppCompatActivity() {
 
     // --- Misc ---
 
+    private fun showSettingsDialog() {
+        val current = booleanArrayOf(prefs.getBoolean(KEY_KEEP_SCREEN_ON, false))
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings)
+            .setMultiChoiceItems(arrayOf(getString(R.string.keep_screen_on)), current) { _, _, checked ->
+                prefs.edit { putBoolean(KEY_KEEP_SCREEN_ON, checked) }
+                applyKeepScreenOn(checked)
+            }
+            .setPositiveButton(R.string.done, null)
+            .show()
+    }
+
     private fun applyKeepScreenOn(enabled: Boolean) {
         if (enabled) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -360,7 +359,6 @@ class MainActivity : AppCompatActivity() {
         private const val HIGHLIGHT_RIGHT = 1
         private const val MAX_UNDO = 200
 
-        private const val KEY_DARK_MODE = "dark_mode"
         private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
         private const val KEY_SESSIONS = "saved_sessions"
         private const val KEY_LIVE_LEFT = "live_left_score"
