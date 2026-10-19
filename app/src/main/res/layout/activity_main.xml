@@ -60,7 +60,8 @@
                 android:layout_width="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="@string/tool_undo" />
+                android:text="@string/undo"
+                app:icon="@drawable/ic_undo" />
         
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_reset"
@@ -68,14 +69,16 @@
                 android:layout_width="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="@string/tool_reset" />
+                android:text="@string/reset"
+                app:icon="@drawable/ic_reset" />
         
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_settings"
                 style="@style/Widget.ScoreCounter.ToolButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/tool_settings" />
+                android:text="@string/settings"
+                app:icon="@drawable/ic_settings" />
         </LinearLayout>
 
         <View
@@ -91,7 +94,7 @@
             app:boxCornerRadiusBottomStart="14dp"
             app:boxCornerRadiusTopEnd="14dp"
             app:boxCornerRadiusTopStart="14dp"
-            app:boxStrokeColor="@color/volt"
+            app:boxStrokeColor="@color/box_stroke"
             app:hintTextColor="@color/volt">
         
             <com.google.android.material.textfield.TextInputEditText
