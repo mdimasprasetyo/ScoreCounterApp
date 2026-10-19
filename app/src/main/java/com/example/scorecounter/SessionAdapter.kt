@@ -1,6 +1,6 @@
 package com.example.scorecounter
 
-import android.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.Context
 import android.text.InputType
 import android.view.LayoutInflater
@@ -27,33 +27,29 @@ class SessionAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(context)
-            .inflate(android.R.layout.simple_list_item_2, parent, false)
+            .inflate(R.layout.item_session, parent, false)
 
-        val text1 = view.findViewById<TextView>(android.R.id.text1)
-        val text2 = view.findViewById<TextView>(android.R.id.text2)
+        val nameView = view.findViewById<TextView>(R.id.session_name)
+        val scoreView = view.findViewById<TextView>(R.id.session_score)
+        val dateView = view.findViewById<TextView>(R.id.session_date)
 
         val session = sessions[position]
-        text1.text = session.name
+        nameView.text = session.name
+        scoreView.text = context.getString(
+            R.string.session_score_line,
+            session.leftName,
+            session.leftScore,
+            session.rightName,
+            session.rightScore
+        )
 
-        // Sessions saved before v1.1 have no savedAt, so they show the score only
+        // Sessions saved before v1.1 have no savedAt, so they show no date
         val savedAt = session.savedAt
-        text2.text = if (savedAt != null) {
-            context.getString(
-                R.string.session_score_text_dated,
-                session.leftName,
-                session.leftScore,
-                session.rightName,
-                session.rightScore,
-                dateFormat.format(Date(savedAt))
-            )
+        if (savedAt != null) {
+            dateView.text = dateFormat.format(Date(savedAt))
+            dateView.visibility = View.VISIBLE
         } else {
-            context.getString(
-                R.string.session_score_text,
-                session.leftName,
-                session.leftScore,
-                session.rightName,
-                session.rightScore
-            )
+            dateView.visibility = View.GONE
         }
 
         view.setOnLongClickListener {
@@ -68,7 +64,7 @@ class SessionAdapter(
 
     private fun showOptionsDialog(index: Int, anchor: View) {
         val options = arrayOf("Edit Name", "Delete")
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setTitle("Session Options")
             .setItems(options) { _, which ->
                 when (which) {
@@ -99,7 +95,7 @@ class SessionAdapter(
         input.inputType = InputType.TYPE_CLASS_TEXT
         input.setText(sessions[index].name)
 
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setTitle("Edit Session Name")
             .setView(input)
             .setPositiveButton("OK") { _, _ ->
