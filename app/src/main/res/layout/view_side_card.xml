@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One side of the scoreboard. Included twice (card_left / card_right); MainActivity colours it. -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.ScoreCounter.SidePanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/tap_to_score">
+
+    <LinearLayout
+        android:id="@+id/side_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Side colour strip, like the team bar on the Pickles scoreboard -->
+        <View
+            android:id="@+id/side_bar"
+            android:layout_width="match_parent"
+            android:layout_height="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/side_tag"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.ScoreCounter.Tag" />
+
+            <TextView
+                android:id="@+id/last_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill_volt"
+                android:fontFamily="@font/jakarta_extrabold"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="1dp"
+                android:text="@string/last_point"
+                android:textColor="@color/navy"
+                android:textSize="10sp"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/side_name"
+            style="@style/Widget.ScoreCounter.NameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="12dp"
+            android:hint="@string/left_side_name"
+            android:saveEnabled="false" />
+
+        <TextView
+            android:id="@+id/side_score"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/default_score"
+            android:textAppearance="@style/TextAppearance.ScoreCounter.Digits" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tap_to_score"
+            android:textColor="@color/muted"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/side_minus"
+                style="@style/Widget.ScoreCounter.ToolButton"
+                android:layout_width="56dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/remove_point"
+                android:padding="0dp"
+                android:text="@string/minus_one" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/side_plus"
+                style="@style/Widget.ScoreCounter.BigButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/add_point"
+                android:padding="0dp"
+                android:text="@string/plus_one"
+                android:textSize="22sp" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
